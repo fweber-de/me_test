@@ -1,0 +1,48 @@
+version: "3.9"
+services:
+
+  #main app container
+  app_dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      APP_ENV: dev
+      APP_SECRET: ${APP_SECRET}
+      DATABASE_URL: ${DATABASE_URL}
+    profiles:
+      - dev
+    ports:
+      - "80"
+    volumes:
+      - ./:/var/www/html/app
+    env_file: .env.local
+    links:
+      - db_dev
+
+  db_dev:
+    platform: linux/x86_64
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: eventdb
+      MYSQL_USER: eventdb
+      MYSQL_PASSWORD: eventdb
+      MYSQL_ROOT_PASSWORD: eventdb
+    volumes:
+      - ./vol/db_dev:/var/lib/mysql
+    profiles:
+      - dev
+
+  pma_dev:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "80"
+    environment:
+      PMA_HOST: db_dev
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: eventdb
+    links:
+      - db_dev
+    profiles:
+      - dev

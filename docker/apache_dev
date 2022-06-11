@@ -1,0 +1,24 @@
+<VirtualHost *:80>
+	ServerAdmin git@fweber.info
+	DocumentRoot /var/www/html/app/public
+
+    <Directory /var/www/html/app/public>
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+	# Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+	# error, crit, alert, emerg.
+	# It is also possible to configure the loglevel for particular
+	# modules, e.g.
+	LogLevel info
+
+    ErrorLog /dev/stdout
+    CustomLog /dev/stdout combined
+
+    SetEnv APP_ENV ${APP_ENV}
+    SetEnv APP_SECRET ${APP_SECRET}
+
+    SetEnv DATABASE_URL ${DATABASE_URL}
+
+</VirtualHost>
