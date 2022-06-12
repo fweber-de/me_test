@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\EventLocationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EventLocationRepository::class)]
@@ -27,7 +28,7 @@ class EventLocation
     private string $city;
 
     #[ORM\OneToMany(mappedBy: 'location', targetEntity: 'Event')]
-    private ArrayCollection $events;
+    private Collection $events;
 
     public function __construct()
     {

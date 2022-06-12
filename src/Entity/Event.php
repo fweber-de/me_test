@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\EventRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
@@ -29,7 +30,7 @@ class Event
 
     #[ORM\ManyToMany(targetEntity: 'Contact', inversedBy: 'events')]
     #[ORM\JoinTable(name: 'events_contacts')]
-    private ArrayCollection $contacts;
+    private Collection $contacts;
 
     #[ORM\ManyToOne(targetEntity: 'EventLocation', inversedBy: 'events')]
     #[ORM\JoinColumn(name: 'location_id', referencedColumnName: 'id')]

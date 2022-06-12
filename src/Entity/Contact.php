@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ContactRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ContactRepository::class)]
@@ -18,7 +19,7 @@ class Contact
     private string $email;
 
     #[ORM\ManyToMany(targetEntity: 'Event', mappedBy: 'contacts')]
-    private ArrayCollection $events;
+    private Collection $events;
 
     public function __construct()
     {
