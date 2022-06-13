@@ -122,18 +122,18 @@ class Event
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getContacts(): ArrayCollection
+    public function getContacts(): Collection
     {
         return $this->contacts;
     }
 
     /**
-     * @param ArrayCollection $contacts
+     * @param Collection $contacts
      * @return Event
      */
-    public function setContacts(ArrayCollection $contacts): Event
+    public function setContacts(Collection $contacts): Event
     {
         $this->contacts = $contacts;
         return $this;

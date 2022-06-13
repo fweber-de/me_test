@@ -6,6 +6,7 @@ use App\Repository\ContactRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: ContactRepository::class)]
 class Contact
@@ -19,6 +20,7 @@ class Contact
     private string $email;
 
     #[ORM\ManyToMany(targetEntity: 'Event', mappedBy: 'contacts')]
+    #[Ignore]
     private Collection $events;
 
     public function __construct()
@@ -53,18 +55,18 @@ class Contact
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getEvents(): ArrayCollection
+    public function getEvents(): Collection
     {
         return $this->events;
     }
 
     /**
-     * @param ArrayCollection $events
+     * @param Collection $events
      * @return Contact
      */
-    public function setEvents(ArrayCollection $events): Contact
+    public function setEvents(Collection $events): Contact
     {
         $this->events = $events;
         return $this;
