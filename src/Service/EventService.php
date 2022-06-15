@@ -28,9 +28,16 @@ class EventService
      */
     public function create(Event $event): Event
     {
+        //todo: add validation
+
+        //call doctrine to persist the event data
         $this->entityManager->persist($event);
         $this->entityManager->flush();
 
         return $event;
+    }
+
+    public function delete(Event $event)
+    {
     }
 }

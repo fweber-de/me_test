@@ -16,7 +16,7 @@ class Event
     #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
     private string $title;
 
     #[ORM\Column(type: 'text')]
@@ -28,11 +28,11 @@ class Event
     #[ORM\Column(type: 'datetime')]
     private DateTime $end_date;
 
-    #[ORM\ManyToMany(targetEntity: 'Contact', inversedBy: 'events')]
+    #[ORM\ManyToMany(targetEntity: 'Contact', inversedBy: 'events', cascade: ['persist'])]
     #[ORM\JoinTable(name: 'events_contacts')]
     private Collection $contacts;
 
-    #[ORM\ManyToOne(targetEntity: 'EventLocation', inversedBy: 'events')]
+    #[ORM\ManyToOne(targetEntity: 'EventLocation', cascade: ['persist'], inversedBy: 'events')]
     #[ORM\JoinColumn(name: 'location_id', referencedColumnName: 'id')]
     private EventLocation $location;
 

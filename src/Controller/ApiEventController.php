@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Contact;
 use App\Entity\Event;
 use App\Entity\EventLocation;
 use App\Repository\EventRepository;
@@ -9,6 +10,7 @@ use App\Service\EventService;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,12 +19,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class ApiEventController extends ApiController
 {
     /**
-     * @param Request $request
      * @param EventRepository $eventRepository
      * @return Response
      */
     #[Route('/', name: 'collection', methods: ['GET'])]
-    public function collection(Request $request, EventRepository $eventRepository): Response
+    public function collection(EventRepository $eventRepository): Response
     {
         $events = $eventRepository->findAll();
 
@@ -30,13 +31,12 @@ class ApiEventController extends ApiController
     }
 
     /**
-     * @param Request $request
      * @param EventRepository $eventRepository
      * @param int $id
      * @return Response
      */
     #[Route('/{id}', name: 'read', methods: ['GET'])]
-    public function read(Request $request, EventRepository $eventRepository, int $id): Response
+    public function read(EventRepository $eventRepository, int $id): Response
     {
         $event = $eventRepository->findOneBy(['id' => $id]);
 
@@ -54,20 +54,42 @@ class ApiEventController extends ApiController
     {
         $json = $request->getContent();
 
+        //parse the provided json data on the lowest possible level -> must bei syntactically correct
+        //todo: add json schema validation later?
         if(!$this->isValidJson($json)) {
-            throw new \InvalidArgumentException('json not valid');
+            throw new InvalidArgumentException('json not valid');
         }
 
         $data = json_decode($json);
 
+        //handle contacts
+        //contacts might be optional on initial creation of the event and should be added later
         $contacts = new ArrayCollection();
-        $location = (new EventLocation())
-            ->setCity('')
-            ->setStreet('')
-            ->setVenue('')
-            ->setZipcode('')
-        ;
 
+        if(isset($data->contacts) && @count($data->contacts) > 0) {
+            foreach($data->contacts as $_contact) {
+                $contact = (new Contact())
+                    ->setEmail($_contact->email)
+                ;
+
+                $contacts->add($contact);
+            }
+        }
+
+        //handle location data
+        //as well as contacts, location data might not be available on event creation
+        if(isset($data->location)) {
+            $location = (new EventLocation())
+                ->setCity($data->location->city)
+                ->setStreet($data->location->street)
+                ->setVenue($data->location->venue)
+                ->setZipcode($data->location->zipcode)
+            ;
+        } else {
+            $location = null;
+        }
+
+        //after all data is gathered create the event object
         $event = (new Event())
             ->setDescription($data->description)
             ->setTitle($data->title)
@@ -77,6 +99,8 @@ class ApiEventController extends ApiController
             ->setLocation($location)
         ;
 
+        //create the event in the database
+        //via a service to provide additional checks on the domain, those wont be based on the delivery medium, json in this case
         $event = $eventService->create($event);
 
         return $this->json($event);
@@ -90,11 +114,23 @@ class ApiEventController extends ApiController
         return $this->json($event, 200);
     }
 
+    /**
+     * @param EventRepository $eventRepository
+     * @param EventService $eventService
+     * @param int $id
+     * @return Response
+     */
     #[Route('/{id}', name: 'delete', methods: ['DELETE'])]
-    public function delete(Request $request, EventRepository $eventRepository, EventService $eventService, int $id): Response
+    public function delete(EventRepository $eventRepository, EventService $eventService, int $id): Response
     {
         $event = $eventRepository->findOneBy(['id' => $id]);
 
-        return $this->json(null, 200);
+        if(!$event) {
+            throw $this->createNotFoundException('event not found');
+        }
+
+        $eventService->delete($event);
+
+        return $this->json(null);
     }
 }
