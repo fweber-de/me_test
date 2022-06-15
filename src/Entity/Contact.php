@@ -11,14 +11,23 @@ use Symfony\Component\Serializer\Annotation\Ignore;
 #[ORM\Entity(repositoryClass: ContactRepository::class)]
 class Contact
 {
+    /**
+     * @var int
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private int $id;
 
+    /**
+     * @var string
+     */
     #[ORM\Column(type: 'string', length: 255, unique: true)]
     private string $email;
 
+    /**
+     * @var Collection
+     */
     #[ORM\ManyToMany(targetEntity: 'Event', mappedBy: 'contacts')]
     #[Ignore]
     private Collection $events;

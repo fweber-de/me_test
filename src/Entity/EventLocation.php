@@ -11,23 +11,41 @@ use Symfony\Component\Serializer\Annotation\Ignore;
 #[ORM\Entity(repositoryClass: EventLocationRepository::class)]
 class EventLocation
 {
+    /**
+     * @var int
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private int $id;
 
+    /**
+     * @var string
+     */
     #[ORM\Column(type: 'string', length: 255)]
     private string $venue;
 
+    /**
+     * @var string
+     */
     #[ORM\Column(type: 'string', length: 255)]
     private string $street;
 
+    /**
+     * @var string
+     */
     #[ORM\Column(type: 'string', length: 255)]
     private string $zipcode;
 
+    /**
+     * @var string
+     */
     #[ORM\Column(type: 'string', length: 255)]
     private string $city;
 
+    /**
+     * @var Collection
+     */
     #[ORM\OneToMany(mappedBy: 'location', targetEntity: 'Event')]
     #[Ignore]
     private Collection $events;

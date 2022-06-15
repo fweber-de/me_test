@@ -11,30 +11,51 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
 {
+    /**
+     * @var int
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private int $id;
 
+    /**
+     * @var string
+     */
     #[ORM\Column(type: 'string', length: 255, unique: true)]
     private string $title;
 
+    /**
+     * @var string
+     */
     #[ORM\Column(type: 'text')]
     private string $description;
 
+    /**
+     * @var DateTime
+     */
     #[ORM\Column(type: 'datetime')]
     private DateTime $start_date;
 
+    /**
+     * @var DateTime
+     */
     #[ORM\Column(type: 'datetime')]
     private DateTime $end_date;
 
+    /**
+     * @var Collection
+     */
     #[ORM\ManyToMany(targetEntity: 'Contact', inversedBy: 'events', cascade: ['persist'])]
     #[ORM\JoinTable(name: 'events_contacts')]
     private Collection $contacts;
 
+    /**
+     * @var EventLocation|null
+     */
     #[ORM\ManyToOne(targetEntity: 'EventLocation', cascade: ['persist'], inversedBy: 'events')]
     #[ORM\JoinColumn(name: 'location_id', referencedColumnName: 'id')]
-    private EventLocation $location;
+    private ?EventLocation $location;
 
     public function __construct()
     {
@@ -140,18 +161,18 @@ class Event
     }
 
     /**
-     * @return EventLocation
+     * @return EventLocation|null
      */
-    public function getLocation(): EventLocation
+    public function getLocation(): ?EventLocation
     {
         return $this->location;
     }
 
     /**
-     * @param EventLocation $location
+     * @param EventLocation|null $location
      * @return Event
      */
-    public function setLocation(EventLocation $location): Event
+    public function setLocation(?EventLocation $location): Event
     {
         $this->location = $location;
         return $this;
