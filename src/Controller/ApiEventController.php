@@ -17,6 +17,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * ApiEventController
+ *
+ * @author Florian Weber <git@fweber.info>
+ */
 #[Route('/api/events', name: 'api_events_')]
 class ApiEventController extends ApiController
 {
@@ -48,6 +53,8 @@ class ApiEventController extends ApiController
     /**
      * @param Request $request
      * @param EventService $eventService
+     * @param ContactRepository $contactRepository
+     * @param EventLocationRepository $eventLocationRepository
      * @return Response
      * @throws Exception
      */
@@ -122,9 +129,16 @@ class ApiEventController extends ApiController
     #[Route('/{id}', name: 'update', methods: ['PATCH'])]
     public function update(Request $request, EventRepository $eventRepository, EventService $eventService, int $id): Response
     {
+        //fetch the event
         $event = $eventRepository->findOneBy(['id' => $id]);
 
-        return $this->json($event, 200);
+        if(!$event) {
+            throw $this->createNotFoundException('event not found');
+        }
+
+        //update
+
+        return $this->json($event);
     }
 
     /**
@@ -136,12 +150,14 @@ class ApiEventController extends ApiController
     #[Route('/{id}', name: 'delete', methods: ['DELETE'])]
     public function delete(EventRepository $eventRepository, EventService $eventService, int $id): Response
     {
+        //fetch the event
         $event = $eventRepository->findOneBy(['id' => $id]);
 
         if(!$event) {
             throw $this->createNotFoundException('event not found');
         }
 
+        //remove the selected event
         $eventService->delete($event);
 
         return $this->json(null);
