@@ -37,7 +37,13 @@ class EventService
         return $event;
     }
 
-    public function delete(Event $event)
+    /**
+     * @param Event $event
+     * @return void
+     */
+    public function delete(Event $event): void
     {
+        $this->entityManager->remove($event);
+        $this->entityManager->flush();
     }
 }
