@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Contact;
 use App\Entity\Event;
 use App\Entity\EventLocation;
+use App\Repository\ContactRepository;
+use App\Repository\EventLocationRepository;
 use App\Repository\EventRepository;
 use App\Service\EventService;
 use DateTime;
@@ -50,7 +52,7 @@ class ApiEventController extends ApiController
      * @throws Exception
      */
     #[Route('/', name: 'create', methods: ['POST'])]
-    public function create(Request $request, EventService $eventService): Response
+    public function create(Request $request, EventService $eventService, ContactRepository $contactRepository, EventLocationRepository $eventLocationRepository): Response
     {
         $json = $request->getContent();
 
@@ -68,9 +70,14 @@ class ApiEventController extends ApiController
 
         if(isset($data->contacts) && @count($data->contacts) > 0) {
             foreach($data->contacts as $_contact) {
-                $contact = (new Contact())
-                    ->setEmail($_contact->email)
-                ;
+                //find existing contact
+                $contact = $contactRepository->findOneBy(['email' => $_contact->email]);
+
+                if(!$contact) {
+                    $contact = (new Contact())
+                        ->setEmail($_contact->email)
+                    ;
+                }
 
                 $contacts->add($contact);
             }
@@ -79,12 +86,18 @@ class ApiEventController extends ApiController
         //handle location data
         //as well as contacts, location data might not be available on event creation
         if(isset($data->location)) {
-            $location = (new EventLocation())
-                ->setCity($data->location->city)
-                ->setStreet($data->location->street)
-                ->setVenue($data->location->venue)
-                ->setZipcode($data->location->zipcode)
-            ;
+            //find existing location
+            //todo: maybe extend to other criteria
+            $location = $eventLocationRepository->findOneBy(['id' => $data->location->id ?? null]);
+
+            if(!$location) {
+                $location = (new EventLocation())
+                    ->setCity($data->location->city)
+                    ->setStreet($data->location->street)
+                    ->setVenue($data->location->venue)
+                    ->setZipcode($data->location->zipcode)
+                ;
+            }
         } else {
             $location = null;
         }
