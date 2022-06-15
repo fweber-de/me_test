@@ -126,8 +126,18 @@ class ApiEventController extends ApiController
         return $this->json($event);
     }
 
-    #[Route('/{id}', name: 'update', methods: ['PATCH'])]
-    public function update(Request $request, EventRepository $eventRepository, EventService $eventService, int $id): Response
+    /**
+     * @param Request $request
+     * @param EventRepository $eventRepository
+     * @param EventService $eventService
+     * @param EventLocationRepository $eventLocationRepository
+     * @param ContactRepository $contactRepository
+     * @param int $id
+     * @return Response
+     * @throws Exception
+     */
+    #[Route('/{id}', name: 'update', methods: ['PUT'])]
+    public function update(Request $request, EventRepository $eventRepository, EventService $eventService, EventLocationRepository $eventLocationRepository, ContactRepository $contactRepository, int $id): Response
     {
         //fetch the event
         $event = $eventRepository->findOneBy(['id' => $id]);
@@ -137,6 +147,69 @@ class ApiEventController extends ApiController
         }
 
         //update
+
+        $json = $request->getContent();
+
+        //parse the provided json data on the lowest possible level -> must bei syntactically correct
+        //todo: add json schema validation later?
+        if(!$this->isValidJson($json)) {
+            throw new InvalidArgumentException('json not valid');
+        }
+
+        $data = json_decode($json);
+
+        //handle contacts
+        //contacts might be optional on initial creation of the event and should be added later
+        $contacts = new ArrayCollection();
+
+        if(isset($data->contacts) && @count($data->contacts) > 0) {
+            foreach($data->contacts as $_contact) {
+                //find existing contact
+                $contact = $contactRepository->findOneBy(['email' => $_contact->email]);
+
+                if(!$contact) {
+                    $contact = (new Contact())
+                        ->setEmail($_contact->email)
+                    ;
+                }
+
+                $contacts->add($contact);
+            }
+
+            $event->setContacts($contacts);
+        }
+
+        if(isset($data->contacts) && (@count($data->contacts) == 0 || $data->contacts == null)) {
+            $event->setContacts(new ArrayCollection());
+        }
+
+        //handle location data
+        //as well as contacts, location data might not be available on event creation
+        if(isset($data->location)) {
+            //find existing location
+            //todo: maybe extend to other criteria
+            $location = $eventLocationRepository->findOneBy(['id' => $data->location->id ?? null]);
+
+            if(!$location) {
+                $location = (new EventLocation())
+                    ->setCity($data->location->city)
+                    ->setStreet($data->location->street)
+                    ->setVenue($data->location->venue)
+                    ->setZipcode($data->location->zipcode)
+                ;
+            }
+
+            $event->setLocation($location);
+        }
+
+        $event
+            ->setTitle($data->title)
+            ->setDescription($data->description)
+            ->setStartDate(new DateTime($data->start_date))
+            ->setEndDate(new DateTime($data->end_date))
+        ;
+
+        $eventService->update($event);
 
         return $this->json($event);
     }

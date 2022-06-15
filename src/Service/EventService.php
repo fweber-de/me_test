@@ -46,4 +46,17 @@ class EventService
         $this->entityManager->remove($event);
         $this->entityManager->flush();
     }
+
+    /**
+     * @param Event $event
+     * @return Event
+     */
+    public function update(Event $event): Event
+    {
+        //todo: add validation
+
+        $this->entityManager->flush();
+
+        return $event;
+    }
 }
