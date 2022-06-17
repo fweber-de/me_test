@@ -31,6 +31,7 @@ class Event
     /**
      * @var string
      */
+    #[ORM\Column(type: 'text')]
     #[Groups(['event_detail'])]
     private string $description;
 

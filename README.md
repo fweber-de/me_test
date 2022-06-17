@@ -26,5 +26,8 @@ docker-compose exec -w /var/www/html/app app_dev php bin/console doctrine:migrat
 
 ## Fixtures laden
 
+Funktioniert nur wenn noch keine Einträge in der DB sind!
+
 ```bash
+docker-compose exec -w /var/www/html/app app_dev php bin/console app:load-fixtures
 ```
