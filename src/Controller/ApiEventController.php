@@ -13,9 +13,11 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use InvalidArgumentException;
+use Nelmio\ApiDocBundle\Model\Model;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use OpenApi\Attributes as OA;
 
 /**
  * ApiEventController
@@ -30,6 +32,14 @@ class ApiEventController extends ApiController
      * @return Response
      */
     #[Route('/', name: 'collection', methods: ['GET'])]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns a list of all submitted events.',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(ref: new Model(type: Event::class))
+        )
+    )]
     public function collection(EventRepository $eventRepository): Response
     {
         $events = $eventRepository->findAll();
@@ -43,6 +53,13 @@ class ApiEventController extends ApiController
      * @return Response
      */
     #[Route('/{id}', name: 'read', methods: ['GET'])]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns a detail view of a specific event.',
+        content: new OA\JsonContent(
+            ref: new Model(type: Event::class)
+        )
+    )]
     public function read(EventRepository $eventRepository, int $id): Response
     {
         $event = $eventRepository->findOneBy(['id' => $id]);
