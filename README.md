@@ -18,6 +18,12 @@ docker-compose --profile dev --env-file .env.local up -d --build
 docker-compose exec -w /var/www/html/app app_dev composer install
 ```
 
+## Datenbank anlegen
+
+```bash
+docker-compose exec -w /var/www/html/app app_dev php bin/console doctrine:database:create
+```
+
 ## Migrations ausführen
 
 ```bash
