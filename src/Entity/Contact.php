@@ -6,6 +6,7 @@ use App\Repository\ContactRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: ContactRepository::class)]
@@ -17,12 +18,14 @@ class Contact
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['event_detail'])]
     private int $id;
 
     /**
      * @var string
      */
     #[ORM\Column(type: 'string', length: 255, unique: true)]
+    #[Groups(['event_detail'])]
     private string $email;
 
     /**

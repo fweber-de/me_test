@@ -34,7 +34,7 @@ class ApiEventController extends ApiController
     {
         $events = $eventRepository->findAll();
 
-        return $this->json($events);
+        return $this->json($events, 200, [], ['groups' => 'event_collection']);
     }
 
     /**
@@ -47,7 +47,7 @@ class ApiEventController extends ApiController
     {
         $event = $eventRepository->findOneBy(['id' => $id]);
 
-        return $this->json($event);
+        return $this->json($event, 200, [], ['groups' => 'event_detail']);
     }
 
     /**

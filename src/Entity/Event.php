@@ -7,6 +7,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
@@ -17,30 +18,34 @@ class Event
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['event_collection', 'event_detail'])]
     private int $id;
 
     /**
      * @var string
      */
     #[ORM\Column(type: 'string', length: 255, unique: true)]
+    #[Groups(['event_collection', 'event_detail'])]
     private string $title;
 
     /**
      * @var string
      */
-    #[ORM\Column(type: 'text')]
+    #[Groups(['event_detail'])]
     private string $description;
 
     /**
      * @var DateTime
      */
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['event_collection', 'event_detail'])]
     private DateTime $start_date;
 
     /**
      * @var DateTime
      */
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['event_detail'])]
     private DateTime $end_date;
 
     /**
@@ -48,6 +53,7 @@ class Event
      */
     #[ORM\ManyToMany(targetEntity: 'Contact', inversedBy: 'events', cascade: ['persist'])]
     #[ORM\JoinTable(name: 'events_contacts')]
+    #[Groups(['event_detail'])]
     private Collection $contacts;
 
     /**
@@ -55,6 +61,7 @@ class Event
      */
     #[ORM\ManyToOne(targetEntity: 'EventLocation', cascade: ['persist'], inversedBy: 'events')]
     #[ORM\JoinColumn(name: 'location_id', referencedColumnName: 'id')]
+    #[Groups(['event_collection', 'event_detail'])]
     private ?EventLocation $location;
 
     public function __construct()
