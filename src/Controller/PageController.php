@@ -47,4 +47,17 @@ class PageController extends AbstractController
             'event' => $event,
         ]);
     }
+
+    /**
+     * @return Response
+     */
+    #[Route('/calendar', name: 'calendar')]
+    public function calendar(): Response
+    {
+        $apipath = $this->generateUrl('api_events_collection');
+
+        return $this->render('page/calendar.html.twig', [
+            'apipath' => $apipath,
+        ]);
+    }
 }

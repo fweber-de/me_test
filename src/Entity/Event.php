@@ -48,7 +48,7 @@ class Event
      * @var DateTime
      */
     #[ORM\Column(type: 'datetime')]
-    #[Groups(['event_detail'])]
+    #[Groups(['event_collection', 'event_detail'])]
     private DateTime $end_date;
 
     /**
