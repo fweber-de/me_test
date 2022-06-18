@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use OpenApi\Attributes as OA;
+use Symfony\Component\Validator\Exception\ValidationFailedException;
 
 /**
  * ApiEventController
@@ -138,7 +139,12 @@ class ApiEventController extends ApiController
 
         //create the event in the database
         //via a service to provide additional checks on the domain, those wont be based on the delivery medium, json in this case
-        $event = $eventService->create($event);
+        try {
+            $event = $eventService->create($event);
+        } catch (ValidationFailedException $validationFailedException) {
+            //todo: hier ggf nicht einfach nur die exeption returnen sondern einen gesonderten error handling api/json output implementieren
+            return $this->json($validationFailedException, 400);
+        }
 
         return $this->json($event);
     }
@@ -226,7 +232,12 @@ class ApiEventController extends ApiController
             ->setEndDate(new DateTime($data->end_date))
         ;
 
-        $eventService->update($event);
+        try {
+            $event = $eventService->update($event);
+        } catch (ValidationFailedException $validationFailedException) {
+            //todo: hier ggf nicht einfach nur die exeption returnen sondern einen gesonderten error handling api/json output implementieren
+            return $this->json($validationFailedException, 400);
+        }
 
         return $this->json($event);
     }
