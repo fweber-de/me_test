@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EventLocationRepository::class)]
 class EventLocation
@@ -26,6 +27,7 @@ class EventLocation
      */
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['event_collection', 'event_detail'])]
+    #[Assert\NotBlank]
     private string $venue;
 
     /**
@@ -33,6 +35,7 @@ class EventLocation
      */
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['event_collection', 'event_detail'])]
+    #[Assert\NotBlank]
     private string $street;
 
     /**
@@ -40,6 +43,7 @@ class EventLocation
      */
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['event_collection', 'event_detail'])]
+    #[Assert\NotBlank]
     private string $zipcode;
 
     /**
@@ -47,6 +51,7 @@ class EventLocation
      */
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['event_collection', 'event_detail'])]
+    #[Assert\NotBlank]
     private string $city;
 
     /**

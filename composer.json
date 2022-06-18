@@ -7,7 +7,7 @@
         "php": ">=7.2.5",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "doctrine/annotations": "^1.0",
+        "doctrine/annotations": "^1.13",
         "doctrine/doctrine-bundle": "^2.7",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.12",
@@ -29,6 +29,7 @@
         "symfony/proxy-manager-bridge": "5.4.*",
         "symfony/runtime": "*",
         "symfony/serializer": "5.4.*",
+        "symfony/validator": "5.4.*",
         "symfony/yaml": "*"
     },
     "config": {
