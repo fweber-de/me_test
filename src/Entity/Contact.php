@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ContactRepository::class)]
 class Contact
@@ -26,6 +27,7 @@ class Contact
      */
     #[ORM\Column(type: 'string', length: 255, unique: true)]
     #[Groups(['event_detail'])]
+    #[Assert\NotBlank]
     private string $email;
 
     /**
