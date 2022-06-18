@@ -70,3 +70,17 @@ Die Swagger Api Doc ist auf der Url `http://localhost:<port>/api/doc` zu finden.
 # Zeiterfassung
 
 Folgende Zeitbuchungen sind für das Projekt erfasst worden:
+
+| Description                       | Start date | Start time | End date | End time | Duration |
+| --------------------------------- | ---------- | ---------- | -------- | -------- | -------- |
+| Bootstrapping                     | 11.06.22   | 09:22:45   | 11.06.22 | 10:02:45 | 00:40:00 |
+| Bootstrapping                     | 11.06.22   | 21:16:33   | 11.06.22 | 22:23:47 | 01:07:14 |
+| App                               | 12.06.22   | 09:40:12   | 12.06.22 | 10:01:43 | 00:21:31 |
+| App                               | 12.06.22   | 10:24:42   | 12.06.22 | 10:47:27 | 00:22:45 |
+| App                               | 12.06.22   | 18:07:48   | 12.06.22 | 18:25:42 | 00:17:54 |
+| App                               | 13.06.22   | 20:44:38   | 13.06.22 | 21:32:15 | 00:47:37 |
+| App                               | 15.06.22   | 20:59:38   | 15.06.22 | 21:51:05 | 00:51:27 |
+| App                               | 17.06.22   | 14:50:16   | 17.06.22 | 15:57:43 | 01:07:27 |
+| Fertigstellung, Doku, Distri Test | 18.06.22   | 13:43:34   | 18.06.22 | 16:24:32 | 02:40:58 |
+
+Total Time: 8:16:53
