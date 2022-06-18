@@ -60,6 +60,13 @@ Funktioniert nur wenn noch keine Einträge in der DB sind!
 docker-compose exec -w /var/www/html/app app_dev php bin/console app:load-fixtures
 ```
 
-# Zeitefassung
+# Benutzung
+
+Auf der Index Site befindet sich ein kleines Frontend mit den Events, Details und einer Kalenderansicht.
+`http://localhost:<port>/`  
+Die Rest-Api ist auf der Url `http://localhost:<port>/api/events/` zu finden.  
+Die Swagger Api Doc ist auf der Url `http://localhost:<port>/api/doc` zu finden.
+
+# Zeiterfassung
 
 Folgende Zeitbuchungen sind für das Projekt erfasst worden:
