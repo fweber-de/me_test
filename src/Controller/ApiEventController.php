@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Exception\ValidationFailedException;
  *
  * @author Florian Weber <git@fweber.info>
  */
-#[Route('/api/events', name: 'api_events_')]
+#[Route('/api/events', name: 'api_events_', format: 'json')]
 class ApiEventController extends ApiController
 {
     /**

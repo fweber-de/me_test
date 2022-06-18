@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+
+                <h1>Events Demo Project</h1>
+
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('index') }}">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Calendar</a>
+                    </li>
+                </ul>
+
+                {% block content %}{% endblock %}
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

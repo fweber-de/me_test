@@ -1,1 +1,31 @@
-###
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+
+    <h2>Upcoming</h2>
+
+    {% for event in events ?? [] %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">{{ event.title }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">At {{ event.location.venue ?? 'tba.'}}</h6>
+                <p class="card-text">
+                    {{ event.description }}
+                    <br>
+                    <span class="badge text-bg-info">
+                        {{ event.startDate|date('d.m.Y') }}
+                    </span>
+                </p>
+                <a href="{{ path('detail', {id: event.id}) }}" class="card-link">Event Details</a>
+                <a href="#" target="_blank" class="card-link">Event Website</a>
+            </div>
+        </div>
+    {% else %}
+
+        <div class="alert alert-warning">
+            No upcoming events found
+        </div>
+
+    {% endfor %}
+
+{% endblock %}

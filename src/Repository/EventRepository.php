@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Event;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,6 +38,22 @@ class EventRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @param DateTime $startBy
+     * @param string $order
+     * @return float|int|mixed|string
+     */
+    public function findUpcoming(DateTime $startBy, string $order = 'ASC'): mixed
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.start_date >= :val')
+            ->setParameter('val', $startBy)
+            ->orderBy('e.start_date', $order)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
 //    /**

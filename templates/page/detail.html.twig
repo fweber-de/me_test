@@ -1,0 +1,43 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+
+    <h2>{{ event.title }}</h2>
+
+    <p>
+        {{ event.description }}
+    </p>
+
+    <table class="table table-striped">
+        <thead></thead>
+        <tbody>
+        <tr>
+            <th>Start</th>
+            <td>{{ event.startDate|date('d.m.Y H:i')}}</td>
+        </tr>
+        <tr>
+            <th>End</th>
+            <td>{{ event.endDate|date('d.m.Y H:i')}}</td>
+        </tr>
+        {% if event.location is not null %}
+        <tr>
+            <th>Location</th>
+            <td>
+                <strong>{{ event.location.venue }}</strong>
+                <br>
+                {{ event.location.street }}, {{ event.location.zipcode }} {{ event.location.city }}
+            </td>
+        </tr>
+        {% endif %}
+
+        {% for contact in event.contacts %}
+            <tr>
+                <th>Email</th>
+                <td>{{ contact.email }}</td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+{% endblock %}
