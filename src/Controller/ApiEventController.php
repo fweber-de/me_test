@@ -13,11 +13,11 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use InvalidArgumentException;
-use Nelmio\ApiDocBundle\Model\Model;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Annotations as OA;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use OpenApi\Attributes as OA;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 
 /**
@@ -31,16 +31,16 @@ class ApiEventController extends ApiController
     /**
      * @param EventRepository $eventRepository
      * @return Response
+     * @OA\Response(
+     *     response="200",
+     *     description="Returns a list of all submitted events.",
+     *     @OA\JsonContent(
+     *          type="array",
+     *          @OA\Items(ref=@Model(type=Event::class))
+     *     )
+     * )
      */
     #[Route('/', name: 'collection', methods: ['GET'])]
-    #[OA\Response(
-        response: 200,
-        description: 'Returns a list of all submitted events.',
-        content: new OA\JsonContent(
-            type: 'array',
-            items: new OA\Items(ref: new Model(type: Event::class))
-        )
-    )]
     public function collection(EventRepository $eventRepository): Response
     {
         $events = $eventRepository->findAll();
@@ -52,15 +52,13 @@ class ApiEventController extends ApiController
      * @param EventRepository $eventRepository
      * @param int $id
      * @return Response
+     * @OA\Response(
+     *     response="200",
+     *     description="Returns a detail view of a specific event.",
+     *     @Model(type=Event::class)
+     * )
      */
     #[Route('/{id}', name: 'read', methods: ['GET'])]
-    #[OA\Response(
-        response: 200,
-        description: 'Returns a detail view of a specific event.',
-        content: new OA\JsonContent(
-            ref: new Model(type: Event::class)
-        )
-    )]
     public function read(EventRepository $eventRepository, int $id): Response
     {
         $event = $eventRepository->findOneBy(['id' => $id]);
@@ -75,6 +73,20 @@ class ApiEventController extends ApiController
      * @param EventLocationRepository $eventLocationRepository
      * @return Response
      * @throws Exception
+     * @OA\Response(
+     *     response="200",
+     *     description="Returns the inputted event data",
+     *     @Model(type=Event::class)
+     * )
+     * @OA\Response(
+     *     response="400",
+     *     description="Returns a validation error"
+     * )
+     * @OA\Post(
+     *     @OA\RequestBody(
+     *          @Model(type=Event::class)
+     *     )
+     * )
      */
     #[Route('/', name: 'create', methods: ['POST'])]
     public function create(Request $request, EventService $eventService, ContactRepository $contactRepository, EventLocationRepository $eventLocationRepository): Response
@@ -158,6 +170,20 @@ class ApiEventController extends ApiController
      * @param int $id
      * @return Response
      * @throws Exception
+     * @OA\Response(
+     *     response="200",
+     *     description="Returns the inputted event data",
+     *     @Model(type=Event::class)
+     * )
+     * @OA\Response(
+     *     response="400",
+     *     description="Returns a validation error"
+     * )
+     * @OA\Put(
+     *     @OA\RequestBody(
+     *          @Model(type=Event::class)
+     *     )
+     * )
      */
     #[Route('/{id}', name: 'update', methods: ['PUT'])]
     public function update(Request $request, EventRepository $eventRepository, EventService $eventService, EventLocationRepository $eventLocationRepository, ContactRepository $contactRepository, int $id): Response
