@@ -29,8 +29,10 @@ use Symfony\Component\Validator\Exception\ValidationFailedException;
 class ApiEventController extends ApiController
 {
     /**
+     * @param Request $request
      * @param EventRepository $eventRepository
      * @return Response
+     * @throws Exception
      * @OA\Response(
      *     response="200",
      *     description="Returns a list of all submitted events.",
@@ -39,11 +41,36 @@ class ApiEventController extends ApiController
      *          @OA\Items(ref=@Model(type=Event::class))
      *     )
      * )
+     * @OA\Parameter(
+     *     name="q",
+     *     in="query",
+     *     description="toggles the search functionality",
+     *     @OA\Schema(type="bool")
+     * )
+     * @OA\Parameter(
+     *     name="start",
+     *     in="query",
+     *     description="date the events must start by",
+     *     @OA\Schema(type="datetime")
+     * )
+     * @OA\Parameter(
+     *     name="end",
+     *     in="query",
+     *     description="date the events must start before",
+     *     @OA\Schema(type="datetime")
+     * )
      */
     #[Route('/', name: 'collection', methods: ['GET'])]
-    public function collection(EventRepository $eventRepository): Response
+    public function collection(Request $request, EventRepository $eventRepository): Response
     {
-        $events = $eventRepository->findAll();
+        if(!$request->get('q')) {
+            $events = $eventRepository->findAll();
+        } else {
+            $start = new DateTime($request->get('start') ?? 'now');
+            $end = new DateTime($request->get('end') ?? 'now');
+
+            $events = $eventRepository->findByTimeframe($start, $end);
+        }
 
         return $this->json($events, 200, [], ['groups' => 'event_collection']);
     }

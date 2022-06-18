@@ -56,28 +56,22 @@ class EventRepository extends ServiceEntityRepository
         ;
     }
 
-//    /**
-//     * @return Event[] Returns an array of Event objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('e.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Event
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /**
+     * @param DateTime $start
+     * @param DateTime $end
+     * @param string $order
+     * @return float|int|mixed|string
+     */
+    public function findByTimeframe(DateTime $start, DateTime $end, string $order = 'ASC'): mixed
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.start_date >= :d1')
+            ->andWhere('e.start_date <= :d2')
+            ->setParameter('d1', $start)
+            ->setParameter('d2', $end)
+            ->orderBy('e.start_date', $order)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
